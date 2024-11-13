@@ -6,6 +6,12 @@ import { OtherzoneService } from '../provider/otherzone.service';
 export class OtherzoneController {
   constructor(private readonly otherzoneService: OtherzoneService) {}
 
+  @Get()
+  @Redirect('https://otherzone.net/')
+  async redirectToOtherzone() {
+    return {};
+  }
+
   @Get('random')
   @Header('Content-Disposition', 'inline')
   async sendRandom(@Query('type') type) {
