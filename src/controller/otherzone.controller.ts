@@ -1,5 +1,6 @@
-import { Controller, Get, Header, Headers, Query, Redirect } from '@nestjs/common';
+import { Controller, Get, Header, Headers, Query, Redirect, UseGuards } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
+import { AuthGuard } from '@nestjs/passport';
 
 import { OtherzoneService } from '../provider/otherzone.service';
 
@@ -30,18 +31,8 @@ export class OtherzoneController {
   }
 
   @Get('random-item')
+  @UseGuards(AuthGuard('api-key'))
   async sendRandomItem(@Query('type') type, @Headers('X-Oz-Key') key: Headers) {
-    if (!key) {
-      return {
-        error: 'Missing "X-Oz-Key" header.'
-      };
-    }
-    if (key !== this.configService.get('MASTER_API_KEY')) {
-      return {
-        error: 'Invalid "X-Oz-Key" header.'
-      };
-    }
-
     if (type && !this.otherzoneService.isOtherzoneType(type)) {
       return {
         error: 'Invalid type.'
@@ -54,18 +45,8 @@ export class OtherzoneController {
   }
 
   @Get('random-url')
+  @UseGuards(AuthGuard('api-key'))
   async sendRandomUrl(@Query('type') type, @Headers('X-Oz-Key') key: Headers) {
-    if (!key) {
-      return {
-        error: 'Missing "X-Oz-Key" header.'
-      };
-    }
-    if (key !== this.configService.get('MASTER_API_KEY')) {
-      return {
-        error: 'Invalid "X-Oz-Key" header.'
-      };
-    }
-
     if (type && !this.otherzoneService.isOtherzoneType(type)) {
       return {
         error: 'Invalid type.'
